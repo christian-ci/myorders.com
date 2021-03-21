@@ -27,9 +27,7 @@ module "vpc" {
 output "vpc_id" {
      value = module.vpc.vpc_id
 }
-output "private_subnets_id" {
-  value = module.vpc.private_subnets
-}
+
 module "gaccelerator_sg" {
 
     source  = "terraform-aws-modules/security-group/aws"
@@ -40,9 +38,7 @@ module "gaccelerator_sg" {
     ingress_cidr_blocks = ["0.0.0.0/0"]
     ingress_rules = ["https-443-tcp", "http-80-tcp"]
 }
-output "gaccelerator_sg_id" {
-    value = module.gaccelerator_sg.this_security_group_id
-}
+
 module "alb_sg" {
     
     source  = "terraform-aws-modules/security-group/aws"
@@ -53,9 +49,7 @@ module "alb_sg" {
     ingress_cidr_blocks = ["0.0.0.0/0"]
     ingress_rules = ["https-443-tcp", "http-80-tcp"]  
 }
-output "alb_sg_id" {
-  value = module.alb_sg.this_security_group_id
-}
+
 module "bastion_sg" {
     source  = "terraform-aws-modules/security-group/aws"
     version = ">=3.18.0"
@@ -71,9 +65,7 @@ module "bastion_sg" {
        },
     ]   
 }
-output "bastion_sg_id" {
-  value = module.bastion_sg.this_security_group_id
-}
+
 module "app_server_sg" {
     source  = "terraform-aws-modules/security-group/aws"
     version = ">=3.18.0"
@@ -95,9 +87,7 @@ module "app_server_sg" {
        },
     ]     
 }
-output "app_server_sg_id" {
-    value = module.app_server_sg.this_security_group_id
-}
+
 module "sftp_server_sg" {
     source  = "terraform-aws-modules/security-group/aws"
     version = ">=3.18.0"
@@ -113,9 +103,7 @@ module "sftp_server_sg" {
        },       
     ]  
 }
-output "sftp_server_sg" {
-  value = module.sftp_server_sg.this_security_group_id
-}
+
 module "db_sg" {
     source  = "terraform-aws-modules/security-group/aws"
     version = ">=3.18.0"
@@ -131,9 +119,7 @@ module "db_sg" {
        },       
     ]  
 }
-output "db_sg_id" {
-  value = module.db_sg.this_security_group_id
-}
+
 locals {
   bucket_name = "s3-private-uploads-${random_string.random.result}"
 }
@@ -222,11 +208,6 @@ module "cloudwatch_log_bucket" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
-
-module "s3uploadprivate" {
-    source = "terraform-aws-modules/s3-bucket/aws"
-    version = ">=1.21.0"    
-}
 module "rds" {
     source = "terraform-aws-modules/rds/aws"
     version = ">=2.34.0"
@@ -262,10 +243,17 @@ module "rds" {
     monitoring_interval = 60
 }
 
-# module "privates3" {
-#     source = "terraform-aws-modules/s3-bucket/aws"
-#     version = ">=1.21.0"
+module "privates3" {
+    source = "terraform-aws-modules/s3-bucket/aws"
+    version = ">=1.21.0"
+
 
     
+}
+# data "aws_iam_policy_document" "bucket_policy" {
+#   statement {
+#     sid       = "s3-bucket-policy"
+#     actions   = ["s3:PutObject", "s3:GetObjectAcl", "s3:GetObject", "s3:listbucket",]
+#     resources = [""]
+#   }
 # }
-# testing branch
