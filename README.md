@@ -7,4 +7,4 @@ If you want to validate it, Just change your credentials at the top of main.tf a
 ***If you are applying to a Region with provisioned Elastic IPs, be aware that there is a max = 5 limit of provisioned
 Elastic Ips. This terraform file follows the same design diagram and 3 NAT Gateways are created per AZ. This is why I am runnig on us-east-2.*** 
 
-Author: Christian Carrasquillo
+Author: Christian Carrasquillo 
